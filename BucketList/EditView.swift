@@ -21,6 +21,7 @@ struct EditView: View {
                     TextField("Description", text: $editModel.description)
                 }
                 
+                // Performing nearby places for selected location
                 Section("Nearby...") {
                     switch editModel.loadingState {
                     case .loading:

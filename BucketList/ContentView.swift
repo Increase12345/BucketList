@@ -12,8 +12,12 @@ struct ContentView: View {
     
     var body: some View {
         Group {
+            
+            // Security check (if user was verified)
             if viewModel.isUnlocked {
                 ZStack {
+                    
+                    // Map View
                     Map(coordinateRegion: $viewModel.mapRegion, annotationItems: viewModel.locations) { location in
                         MapAnnotation(coordinate: location.coordinate) {
                             VStack {
@@ -34,6 +38,7 @@ struct ContentView: View {
                     }
                     .ignoresSafeArea()
                     
+                    // Map annotation pointer
                     Circle()
                         .fill(.blue)
                         .opacity(0.3)
@@ -41,8 +46,9 @@ struct ContentView: View {
                     
                     VStack {
                         Spacer()
-                        
                         HStack {
+                            
+                            // Remove Saved places button
                             Button {
                                 viewModel.locations.removeAll()
                                 viewModel.save()
@@ -55,9 +61,9 @@ struct ContentView: View {
                                     .clipShape(Circle())
                                     .padding(.leading)
                             }
-                            
                             Spacer()
                             
+                            // Add location button
                             Button {
                                 viewModel.addLocation()
                             } label: {
@@ -72,11 +78,14 @@ struct ContentView: View {
                         }
                     }
                 }
+                // Sheet to show the view of Edititing location
                 .sheet(item: $viewModel.selectedPlace) { place in
                     EditView(location: place) { newLocation in
                         viewModel.update(location: newLocation)
                     }
                 }
+                
+                // Security check (if user was NOT verified)
             } else {
                 VStack {
                     Spacer()
@@ -94,6 +103,8 @@ struct ContentView: View {
                 .background(.secondary)
             }
         }
+        
+        // Alert to show if youser was Not verified and why
         .alert("Error", isPresented: $viewModel.authenticateAlert) {
             Button("OK", action: { })
         } message: {
